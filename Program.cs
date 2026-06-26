@@ -6,10 +6,10 @@ using DesignPatterns.ConsoleApp.Patterns._02_Builder;
 // ==================================================
 
 // Before Refactoring
-StrategyBeforeDemo.Run();
+//StrategyBeforeDemo.Run();
 
-// After Refactoring
-StrategyAfterDemo.Run();
+//// After Refactoring
+//StrategyAfterDemo.Run();
 
 
 // ==================================================

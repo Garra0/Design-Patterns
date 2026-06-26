@@ -7,7 +7,11 @@ namespace DesignPatterns.ConsoleApp.Patterns._02_Builder;
 // الكود بعد التحسين
 // ====================================================================================
 
-// 1. Computer: (الكائن المراد بناؤه)
+// Note: (ملاحظة: بفصل منطق البناء عن كلاس البيانات، حققنا مبادئ تصميم هامة مثل)
+// 1. Single Responsibility Principle: (كلاس الكمبيوتر مسؤول فقط عن تخزين البيانات، وكلاس البناء مسؤول عن كيفية تجميع المواصفات)
+// 2. Open/Closed Principle: (يمكننا إضافة مواصفات جديدة بالبناء دون تعديل المشيد أو كسر الكود القديم للعملاء)
+
+// Product: (الكائن المراد بناؤه)
 public class Computer
 {
     // (قيم افتراضية لتفادي أخطاء null)
@@ -18,50 +22,56 @@ public class Computer
     public bool HasWiFi { get; set; }
 }
 
-// 2. ComputerBuilder: (كلاس البناء)
+// Builder: (كلاس البناء المخصص لتجميع الخصائص خطوة بخطوة)
 public class ComputerBuilder
 {
     private readonly Computer _computer = new Computer();
 
-    // AddCPU: (كل دالة تقوم بتجهيز جزء، ثم ترجع نفس كلاس البناء)
+    // Fluent Interface: (ميثودز ترجع الكائن نفسه لتسمح بربط العمليات متتالية خلف بعضها)
+
+    // AddCPU: (تقوم بتجهيز المعالج ثم ترجع نفس البناء)
     public ComputerBuilder AddCPU(string cpu)
     {
         _computer.CPU = cpu;
         return this;
     }
 
+    // AddRAM: (تقوم بتجهيز الرام ثم ترجع نفس البناء)
     public ComputerBuilder AddRAM(string ram)
     {
         _computer.RAM = ram;
         return this;
     }
 
+    // AddStorage: (تقوم بتجهيز الهارد ثم ترجع نفس البناء)
     public ComputerBuilder AddStorage(string storage)
     {
         _computer.Storage = storage;
         return this;
     }
 
+    // WithGPU: (تقوم بتجهيز كرت الشاشة ثم ترجع نفس البناء)
     public ComputerBuilder WithGPU()
     {
         _computer.HasGPU = true;
         return this;
     }
 
+    // WithWiFi: (تقوم بتجهيز الواي فاي ثم ترجع نفس البناء)
     public ComputerBuilder WithWiFi()
     {
         _computer.HasWiFi = true;
         return this;
     }
 
-    // Build: (دالة التقفيل التي ترجع الكائن النهائي)
+    // Build: (الدالة النهائية التي ترجع الكائن النهائي المكتمل)
     public Computer Build()
     {
         return _computer;
     }
 }
 
-// 3. BuilderAfterDemo: (الاستدعاء)
+// Demo Runner: (مشغل الديمو بعد تطبيق الباترين)
 public static class BuilderAfterDemo
 {
     public static void Run()
