@@ -7,106 +7,76 @@ namespace DesignPatterns.ConsoleApp.Patterns._02_Builder;
 // الكود بعد التحسين
 // ====================================================================================
 
-// Note: (ملاحظة: بفصل منطق البناء عن كلاس البيانات، حققنا مبادئ تصميم هامة مثل)
-// 1. Single Responsibility Principle: (كلاس الكمبيوتر مسؤول فقط عن تخزين البيانات، وكلاس البناء مسؤول عن كيفية تجميع المواصفات)
-// 2. Open/Closed Principle: (يمكننا إضافة مواصفات جديدة بالبناء دون تعديل المشيد أو كسر الكود القديم للعملاء)
-
-// Product: (المنتج النهائي الذي نريد بناؤه ويكون غير قابل للتعديل بعد الإنشاء)
+// 1. Computer: (الكائن المراد بناؤه)
 public class Computer
 {
-    public string CPU { get; }
-    public string RAM { get; }
-    public string Storage { get; }
-    public string? GPU { get; }
-    public bool HasWifi { get; }
-    public bool HasBluetooth { get; }
-
-    // (المشيد يستقبل كلاس البناء لنسخ القيم وإنشاء كائن كامل وصحيح)
-    public Computer(ComputerBuilder builder)
-    {
-        CPU = builder.CPU;
-        RAM = builder.RAM;
-        Storage = builder.Storage;
-        GPU = builder.GPU;
-        HasWifi = builder.HasWifi;
-        HasBluetooth = builder.HasBluetooth;
-    }
+    // (قيم افتراضية لتفادي أخطاء null)
+    public string CPU { get; set; } = "Intel i3";
+    public string RAM { get; set; } = "4GB";
+    public string Storage { get; set; } = "128GB SSD";
+    public bool HasGPU { get; set; }
+    public bool HasWiFi { get; set; }
 }
 
-// Builder: (كلاس البناء المخصص لتجميع الخصائص خطوة بخطوة)
+// 2. ComputerBuilder: (كلاس البناء)
 public class ComputerBuilder
 {
-    // (خصائص مؤقتة لتجميع قيمها تدريجياً مع قيم افتراضية)
-    public string CPU { get; private set; } = "Intel i3"; 
-    public string RAM { get; private set; } = "4GB";
-    public string Storage { get; private set; } = "128GB SSD";
-    public string? GPU { get; private set; } = null;
-    public bool HasWifi { get; private set; } = false;
-    public bool HasBluetooth { get; private set; } = false;
+    private readonly Computer _computer = new Computer();
 
-    // Fluent Interface: (ميثودز ترجع الكائن نفسه لتسمح بربط العمليات متتالية خلف بعضها)
-    
-    public ComputerBuilder SetCPU(string cpu)
+    // AddCPU: (كل دالة تقوم بتجهيز جزء، ثم ترجع نفس كلاس البناء)
+    public ComputerBuilder AddCPU(string cpu)
     {
-        CPU = cpu;
-        return this; // (نعيد الكائن الحالي لربط العمليات)
-    }
-
-    public ComputerBuilder SetRAM(string ram)
-    {
-        RAM = ram;
+        _computer.CPU = cpu;
         return this;
     }
 
-    public ComputerBuilder SetStorage(string storage)
+    public ComputerBuilder AddRAM(string ram)
     {
-        Storage = storage;
+        _computer.RAM = ram;
         return this;
     }
 
-    public ComputerBuilder SetGPU(string? gpu)
+    public ComputerBuilder AddStorage(string storage)
     {
-        GPU = gpu;
+        _computer.Storage = storage;
         return this;
     }
 
-    public ComputerBuilder SetWifi(bool hasWifi)
+    public ComputerBuilder WithGPU()
     {
-        HasWifi = hasWifi;
+        _computer.HasGPU = true;
         return this;
     }
 
-    public ComputerBuilder SetBluetooth(bool hasBluetooth)
+    public ComputerBuilder WithWiFi()
     {
-        HasBluetooth = hasBluetooth;
+        _computer.HasWiFi = true;
         return this;
     }
 
-    // Build: (الميثود النهائية التي تنشئ المنتج الفعلي بعد اكتمال البناء)
+    // Build: (دالة التقفيل التي ترجع الكائن النهائي)
     public Computer Build()
     {
-        return new Computer(this);
+        return _computer;
     }
 }
 
-// Demo Runner: (مشغل الديمو بعد تطبيق الباترين)
+// 3. BuilderAfterDemo: (الاستدعاء)
 public static class BuilderAfterDemo
 {
     public static void Run()
     {
         Console.WriteLine("\n--- Running AFTER Builder Pattern ---");
 
-        // Method Chaining: (بناء جهاز كمبيوتر بالمواصفات المطلوبة فقط دون الحاجة لتمرير قيم فارغة)
-        var builder = new ComputerBuilder();
-        
-        Computer gamingComputer = builder.SetCPU("Intel i9")
-                                         .SetRAM("32GB")
-                                         .SetStorage("2TB SSD")
-                                         .SetGPU("RTX 4090")
-                                         .SetWifi(true)
-                                         .Build();
+        // Method Chaining: (الكود أصبح يقرأ كقصة ويمكننا تجاهل الخصائص غير المطلوبة)
+        var myPc = new ComputerBuilder()
+            .AddCPU("Intel i7")
+            .AddRAM("16GB")
+            .AddStorage("1TB")
+            .WithGPU()
+            // (تجاهلنا الـ WiFi لأنه غير مطلوب)
+            .Build(); 
 
-        Console.WriteLine($"Gaming Computer: CPU={gamingComputer.CPU}, RAM={gamingComputer.RAM}, GPU={gamingComputer.GPU}");
-        Console.WriteLine($"Has Wifi: {gamingComputer.HasWifi}, Has Bluetooth: {gamingComputer.HasBluetooth}");
+        Console.WriteLine($"Computer details: CPU={myPc.CPU}, RAM={myPc.RAM}, GPU={myPc.HasGPU}");
     }
 }
