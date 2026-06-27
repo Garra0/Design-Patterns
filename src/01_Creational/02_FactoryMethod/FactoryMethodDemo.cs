@@ -53,7 +53,7 @@ public abstract class NotificationCreator
 // Concrete Creator A: (المصنع الفرعي الأول لإنشاء كائن الإيميل)
 public class EmailCreator : NotificationCreator
 {
-    public override INotification CreateNotification() => "new EmailNotification()";
+    public override INotification CreateNotification() => new EmailNotification();
 }
 
 // Concrete Creator B: (المصنع الفرعي الثاني لإنشاء كائن الرسائل النصية)
