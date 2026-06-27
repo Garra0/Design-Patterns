@@ -2,6 +2,7 @@ using DesignPatterns.ConsoleApp.Patterns._01_Strategy;
 using DesignPatterns.ConsoleApp.Patterns._02_Builder;
 using DesignPatterns.ConsoleApp.Patterns._03_FactoryMethod;
 using DesignPatterns.ConsoleApp.Patterns._04_AbstractFactory;
+using DesignPatterns.ConsoleApp.Patterns._05_InOutbox;
 
 // ==================================================
 // 01. Strategy Pattern
@@ -45,3 +46,14 @@ AbstractFactoryBeforeDemo.Run();
 
 // After Refactoring
 AbstractFactoryAfterDemo.Run();
+
+
+// ==================================================
+// 05. Transactional Outbox Pattern
+// ==================================================
+
+// Before Refactoring
+InOutboxBeforeDemo.Run();
+
+// After Refactoring
+InOutboxAfterDemo.Run();
